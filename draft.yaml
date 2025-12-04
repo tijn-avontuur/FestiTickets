@@ -1,0 +1,41 @@
+models:
+  Event:
+    name: string
+    description: text
+    location: string
+    date: datetime
+    total_tickets: integer
+    price: decimal:8,2
+    image_url: string nullable
+    relationships:
+      hasMany: tickets
+    timestamps: true
+
+  Payment:
+    provider: string
+    payment_reference: string unique
+    status: string
+    amount: decimal:10,2
+    relationships:
+      hasMany: orders
+    timestamps: true
+
+  Order:
+    user_id: id foreign:users
+    payment_id: id foreign:payments
+    total_amount: decimal:10,2
+    status: string
+    relationships:
+      belongsTo: user, payment
+      hasMany: tickets
+    timestamps: true
+
+  Ticket:
+    order_id: id foreign:orders
+    event_id: id foreign:events
+    ticket_code: string unique
+    pdf_path: string nullable
+    price: decimal:8,2
+    relationships:
+      belongsTo: order, event
+    timestamps: true

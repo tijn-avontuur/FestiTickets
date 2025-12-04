@@ -1,0 +1,19 @@
+created:
+    - database/factories/EventFactory.php
+    - database/factories/PaymentFactory.php
+    - database/factories/OrderFactory.php
+    - database/factories/TicketFactory.php
+    - database/migrations/2025_12_04_134424_create_events_table.php
+    - database/migrations/2025_12_04_134425_create_payments_table.php
+    - database/migrations/2025_12_04_134426_create_orders_table.php
+    - database/migrations/2025_12_04_134427_create_tickets_table.php
+    - app/Models/Event.php
+    - app/Models/Payment.php
+    - app/Models/Order.php
+    - app/Models/Ticket.php
+models:
+    User: { name: string, email: 'string unique', password: string, google_id: 'string nullable', role: string, timestamps: timestamps }
+    Event: { name: string, description: text, location: string, date: datetime, total_tickets: integer, price: 'decimal:8,2', image_url: 'string nullable', relationships: { hasMany: tickets }, timestamps: timestamps }
+    Payment: { provider: string, payment_reference: 'string unique', status: string, amount: 'decimal:10,2', relationships: { hasMany: orders }, timestamps: timestamps }
+    Order: { user_id: 'id foreign:users', payment_id: 'id foreign:payments', total_amount: 'decimal:10,2', status: string, relationships: { belongsTo: 'user, payment', hasMany: tickets }, timestamps: timestamps }
+    Ticket: { order_id: 'id foreign:orders', event_id: 'id foreign:events', ticket_code: 'string unique', pdf_path: 'string nullable', price: 'decimal:8,2', relationships: { belongsTo: 'order, event' }, timestamps: timestamps }
