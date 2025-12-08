@@ -61,16 +61,4 @@ class UserFactory extends Factory
             'is_admin' => true,
         ]);
     }
-
-    /**
-     * Indicate that the user has two-factor authentication disabled.
-     */
-    public function withoutTwoFactor(): static
-    {
-        return $this->state(fn (array $attributes) => [
-            'two_factor_secret' => null,
-            'two_factor_recovery_codes' => null,
-            'two_factor_confirmed_at' => null,
-        ]);
-    }
 }
