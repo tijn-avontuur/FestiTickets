@@ -5,11 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Fortify\TwoFactorAuthenticatable;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, TwoFactorAuthenticatable;
+    use HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -65,14 +64,5 @@ class User extends Authenticatable
             ->map(fn($part) => strtoupper(mb_substr($part, 0, 1)))
             ->take(2)
             ->implode('');
-    }
-
-    /**
-     * Determine if the user has enabled two-factor authentication.
-     */
-    public function hasEnabledTwoFactorAuthentication(): bool
-    {
-        return ! is_null($this->two_factor_secret)
-            && ! is_null($this->two_factor_confirmed_at);
     }
 }
