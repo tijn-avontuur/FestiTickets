@@ -119,7 +119,8 @@
                                             <div class="text-xs text-gray-600">Beschikbaar</div>
                                         </div>
                                         <div>
-                                            <div class="text-2xl font-bold text-green-600">{{ $event->date->diffForHumans() }}</div>
+                                            <div class="text-2xl font-bold text-green-600">{{ ucfirst($event->date->diffForHumans()) }}</div>
+                                            <div class="text-xs text-gray-600">{{ $event->date->format('d-m-Y H:i') }}</div>
                                             <div class="text-xs text-gray-600">Begint</div>
                                         </div>
                                     </div>
