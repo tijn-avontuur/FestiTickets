@@ -11,18 +11,116 @@
                 </a>
             </div>
 
-            <!-- Event Detail Card -->
-            <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-                <!-- Event Image -->
-                <div class="h-96 bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center relative">
-                    @if($event->image_url)
-                        <img src="{{ $event->image_url }}" alt="{{ $event->name }}" class="w-full h-full object-cover">
-                    @else
+            @php
+                $allImages = [];
+                if($event->image_url) {
+                    $allImages[] = $event->image_url;
+                }
+                foreach($event->images as $image) {
+                    $allImages[] = asset('storage/' . $image->path);
+                }
+                $imageCount = count($allImages);
+            @endphp
+
+            <!-- Event Image(s) -->
+            @if($imageCount === 1)
+                <!-- Single Image Display -->
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4">
+                    <div class="h-96">
+                        <img src="{{ $allImages[0] }}" alt="{{ $event->name }}" class="w-full h-full object-cover">
+                    </div>
+                </div>
+            @elseif($imageCount > 1)
+                <!-- Image Slider -->
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4">
+                    <div id="imageSlider" class="relative bg-gray-900" style="height: 600px; max-height: 80vh;">
+                        <!-- Slider Images -->
+                        @foreach($allImages as $index => $imageUrl)
+                            <div class="slider-slide" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: {{ $index === 0 ? '1' : '0' }}; z-index: {{ $index === 0 ? '10' : '1' }}; transition: opacity 0.5s ease-in-out;">
+                                <img src="{{ $imageUrl }}" alt="{{ $event->name }} - Image {{ $index + 1 }}" style="width: 100%; height: 100%; object-fit: cover;">
+                            </div>
+                        @endforeach
+
+                        <!-- Navigation Arrows -->
+                        <button type="button" onclick="slideNav(-1)" style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); z-index: 50; background: white; width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: all 0.3s; cursor: pointer; border: none;">
+                            <svg style="width: 24px; height: 24px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                            </svg>
+                        </button>
+                        <button type="button" onclick="slideNav(1)" style="position: absolute; right: 16px; top: 50%; transform: translateY(-50%); z-index: 50; background: white; width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: all 0.3s; cursor: pointer; border: none;">
+                            <svg style="width: 24px; height: 24px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </button>
+
+                        <!-- Dot Indicators -->
+                        <div style="position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; z-index: 50;">
+                            @foreach($allImages as $index => $imageUrl)
+                                <button type="button" onclick="slideNav({{ $index }}, true)" class="slider-dot" style="border-radius: 9999px; transition: all 0.3s; cursor: pointer; border: none; {{ $index === 0 ? 'width: 32px; height: 12px; background: white;' : 'width: 12px; height: 12px; background: rgba(255,255,255,0.5);' }}"></button>
+                            @endforeach
+                        </div>
+
+                        <!-- Counter -->
+                        <div style="position: absolute; top: 16px; right: 16px; background: rgba(0,0,0,0.7); color: white; padding: 6px 12px; border-radius: 9999px; font-size: 14px; font-weight: 500; z-index: 50;">
+                            <span id="slideNum">1</span> / {{ $imageCount }}
+                        </div>
+                    </div>
+                </div>
+
+                <script>
+                    (function() {
+                        let currentIndex = 0;
+                        const totalImages = {{ $imageCount }};
+
+                        window.slideNav = function(dir, isDirect = false) {
+                            if (isDirect) {
+                                currentIndex = dir;
+                            } else {
+                                currentIndex = (currentIndex + dir + totalImages) % totalImages;
+                            }
+
+                            const slides = document.querySelectorAll('.slider-slide');
+                            const dots = document.querySelectorAll('.slider-dot');
+                            const counter = document.getElementById('slideNum');
+
+                            slides.forEach((slide, idx) => {
+                                slide.style.opacity = idx === currentIndex ? '1' : '0';
+                                slide.style.zIndex = idx === currentIndex ? '10' : '1';
+                            });
+
+                            dots.forEach((dot, idx) => {
+                                if (idx === currentIndex) {
+                                    dot.style.width = '32px';
+                                    dot.style.height = '12px';
+                                    dot.style.background = 'white';
+                                } else {
+                                    dot.style.width = '12px';
+                                    dot.style.height = '12px';
+                                    dot.style.background = 'rgba(255,255,255,0.5)';
+                                }
+                            });
+
+                            if (counter) counter.textContent = currentIndex + 1;
+                        };
+
+                        document.addEventListener('keydown', function(e) {
+                            if (e.key === 'ArrowLeft') slideNav(-1);
+                            if (e.key === 'ArrowRight') slideNav(1);
+                        });
+                    })();
+                </script>
+            @else
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden mb-4">
+                    <div class="h-96 bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center relative">
                         <svg class="w-24 h-24 text-white opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"></path>
                         </svg>
-                    @endif
+                    </div>
                 </div>
+            @endif
+
+            <!-- Event Detail Card -->
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden">
 
                 <!-- Event Content -->
                 <div class="p-8">
@@ -173,7 +271,9 @@
                     @foreach($relatedEvents as $relatedEvent)
                         <a href="{{ route('events.show', $relatedEvent) }}" class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow">
                             <div class="h-32 bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center relative">
-                                @if($relatedEvent->image_url)
+                                @if($relatedEvent->images->count() > 0)
+                                    <img src="{{ asset('storage/' . $relatedEvent->images->first()->path) }}" alt="{{ $relatedEvent->name }}" class="w-full h-full object-cover">
+                                @elseif($relatedEvent->image_url)
                                     <img src="{{ $relatedEvent->image_url }}" alt="{{ $relatedEvent->name }}" class="w-full h-full object-cover">
                                 @else
                                     <svg class="w-8 h-8 text-white opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">

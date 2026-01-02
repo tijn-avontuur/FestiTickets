@@ -23,6 +23,10 @@ class EventController extends Controller
      */
     public function show(Event $event): View
     {
+        $event->load(['images' => function($query) {
+            $query->orderBy('order');
+        }, 'categories']);
+
         return view('events.show', compact('event'));
     }
 

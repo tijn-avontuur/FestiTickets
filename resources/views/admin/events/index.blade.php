@@ -94,7 +94,9 @@
 
                                         <template x-if="!editing">
                                             <td class="px-6 py-4 whitespace-nowrap">
-                                                <div class="text-sm font-medium text-gray-900">{{ $category->name }}</div>
+                                                <div class="text-sm font-medium text-gray-900">
+                                                    {{ $category->name }}
+                                                </div>
                                             </td>
                                         </template>
                                         <template x-if="editing">
@@ -168,7 +170,9 @@
                             @foreach($events as $event)
                                 <tr class="hover:bg-gray-50 transition">
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm font-medium text-gray-900">{{ $event->name }}</div>
+                                        <a href="{{ route('events.show', $event) }}" class="text-sm font-medium text-blue-600 hover:text-blue-900 hover:underline">
+                                            {{ $event->name }}
+                                        </a>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="text-sm text-gray-600">{{ $event->location }}</div>

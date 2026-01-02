@@ -9,7 +9,7 @@
 
             <!-- Form -->
             <div class="bg-white rounded-lg shadow p-8">
-                <form action="{{ route('admin.events.store') }}" method="POST">
+                <form action="{{ route('admin.events.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
 
                     <!-- Name -->
@@ -67,7 +67,7 @@
                         <!-- Total Tickets -->
                         <div>
                             <label for="total_tickets" class="block text-sm font-medium text-gray-700 mb-2">Totaal Tickets *</label>
-                            <input type="number" name="total_tickets" id="total_tickets" value="{{ old('total_tickets') }}" min="1"
+                            <input type="number" name="total_tickets" id="total_tickets" value="{{ old('total_tickets') }}" min="0"
                                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('total_tickets') border-red-500 @enderror">
                             @error('total_tickets')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -83,6 +83,24 @@
                         @error('image_url')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
+                    </div>
+
+                    <!-- Event Images Upload -->
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Afbeeldingen Uploaden (max 5)</label>
+                        <input type="file" name="images[]" id="images" multiple accept="image/*"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('images') border-red-500 @enderror"
+                            onchange="previewImages(event)">
+                        @error('images')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                        @error('images.*')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                        <p class="mt-1 text-xs text-gray-500">Selecteer maximaal 5 afbeeldingen (JPG, PNG, max 2MB per afbeelding)</p>
+
+                        <!-- Image Preview -->
+                        <div id="imagePreview" class="mt-4 grid grid-cols-2 md:grid-cols-5 gap-3"></div>
                     </div>
 
                     <!-- Categories -->
@@ -121,4 +139,35 @@
             </div>
         </div>
     </div>
+
+    <script>
+        function previewImages(event) {
+            const preview = document.getElementById('imagePreview');
+            preview.innerHTML = '';
+            const files = event.target.files;
+
+            if (files.length > 5) {
+                alert('Maximaal 5 afbeeldingen toegestaan');
+                event.target.value = '';
+                return;
+            }
+
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    const div = document.createElement('div');
+                    div.className = 'relative';
+                    div.innerHTML = `
+                        <img src="${e.target.result}" class="w-full h-24 object-cover rounded-lg border-2 border-gray-300">
+                        <div class="absolute top-1 right-1 bg-blue-600 text-white text-xs px-2 py-1 rounded">${i + 1}</div>
+                    `;
+                    preview.appendChild(div);
+                }
+
+                reader.readAsDataURL(file);
+            }
+        }
+    </script>
 </x-layouts.app>

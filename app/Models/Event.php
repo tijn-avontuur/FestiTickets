@@ -49,4 +49,9 @@ class Event extends Model
     {
         return $this->belongsToMany(Category::class);
     }
+
+    public function images(): HasMany
+    {
+        return $this->hasMany(EventImage::class)->orderBy('order');
+    }
 }

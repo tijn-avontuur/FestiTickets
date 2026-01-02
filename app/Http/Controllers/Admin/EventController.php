@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Event;
+use App\Models\EventImage;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Storage;
 
 class EventController extends Controller
 {
@@ -40,11 +42,13 @@ class EventController extends Controller
             'description' => 'required|string',
             'location' => 'required|string|max:255',
             'date' => 'required|date',
-            'total_tickets' => 'required|integer|min:1',
+            'total_tickets' => 'required|integer|min:0',
             'price' => 'required|numeric|min:0',
             'image_url' => 'nullable|url|max:255',
             'categories' => 'nullable|array',
             'categories.*' => 'exists:categories,id',
+            'images' => 'nullable|array|max:5',
+            'images.*' => 'image|mimes:jpeg,jpg,png|max:2048',
         ]);
 
         $event = Event::create($validated);
@@ -52,6 +56,18 @@ class EventController extends Controller
         // Attach categories if provided
         if ($request->has('categories')) {
             $event->categories()->attach($request->categories);
+        }
+
+        // Handle image uploads
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $index => $image) {
+                $path = $image->store('event-images', 'public');
+                EventImage::create([
+                    'event_id' => $event->id,
+                    'path' => $path,
+                    'order' => $index + 1,
+                ]);
+            }
         }
 
         return redirect()->route('admin.events.index')
@@ -77,17 +93,49 @@ class EventController extends Controller
             'description' => 'required|string',
             'location' => 'required|string|max:255',
             'date' => 'required|date',
-            'total_tickets' => 'required|integer|min:1',
+            'total_tickets' => 'required|integer|min:0',
             'price' => 'required|numeric|min:0',
             'image_url' => 'nullable|url|max:255',
             'categories' => 'nullable|array',
             'categories.*' => 'exists:categories,id',
+            'images' => 'nullable|array|max:5',
+            'images.*' => 'image|mimes:jpeg,jpg,png|max:2048',
+            'delete_images' => 'nullable|array',
+            'delete_images.*' => 'exists:event_images,id',
         ]);
 
         $event->update($validated);
 
         // Sync categories (removes old ones and adds new ones)
         $event->categories()->sync($request->categories ?? []);
+
+        // Delete selected images
+        if ($request->has('delete_images')) {
+            foreach ($request->delete_images as $imageId) {
+                $image = EventImage::find($imageId);
+                if ($image && $image->event_id === $event->id) {
+                    Storage::disk('public')->delete($image->path);
+                    $image->delete();
+                }
+            }
+        }
+
+        // Handle new image uploads
+        if ($request->hasFile('images')) {
+            $currentImageCount = $event->images()->count();
+            $maxOrder = $event->images()->max('order') ?? 0;
+
+            foreach ($request->file('images') as $index => $image) {
+                if ($currentImageCount + $index + 1 <= 5) {
+                    $path = $image->store('event-images', 'public');
+                    EventImage::create([
+                        'event_id' => $event->id,
+                        'path' => $path,
+                        'order' => $maxOrder + $index + 1,
+                    ]);
+                }
+            }
+        }
 
         return redirect()->route('admin.events.index')
             ->with('success', 'Evenement succesvol bijgewerkt!');
