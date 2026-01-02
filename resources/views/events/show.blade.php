@@ -31,6 +31,20 @@
                         <div class="md:col-span-2">
                             <h1 class="text-4xl font-bold text-gray-900 mb-4">{{ $event->name }}</h1>
 
+                            <!-- Categories -->
+                            @if($event->categories->count() > 0)
+                                <div class="flex flex-wrap gap-2 mb-6">
+                                    @foreach($event->categories as $category)
+                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+                                            @if($category->icon)
+                                                <span class="mr-1">{{ $category->icon }}</span>
+                                            @endif
+                                            {{ $category->name }}
+                                        </span>
+                                    @endforeach
+                                </div>
+                            @endif
+
                             <!-- Event Info -->
                             <div class="space-y-3 mb-6">
                                 <!-- Date -->
@@ -77,27 +91,44 @@
                                 </div>
 
                                 @auth
-                                    <!-- Ticket Selection -->
-                                    <div class="mb-6">
-                                        <label for="quantity" class="block text-sm font-medium text-gray-700 mb-2">Aantal tickets</label>
-                                        <select id="quantity" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                                            @for($i = 1; $i <= min(10, $event->total_tickets); $i++)
-                                                <option value="{{ $i }}">{{ $i }} {{ $i == 1 ? 'ticket' : 'tickets' }}</option>
-                                            @endfor
-                                        </select>
-                                    </div>
+                                    @if($event->total_tickets > 0)
+                                        <!-- Ticket Selection -->
+                                        <div class="mb-6">
+                                            <label for="quantity" class="block text-sm font-medium text-gray-700 mb-2">Aantal tickets</label>
+                                            <select id="quantity" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                                @for($i = 1; $i <= min(10, $event->total_tickets); $i++)
+                                                    <option value="{{ $i }}">{{ $i }} {{ $i == 1 ? 'ticket' : 'tickets' }}</option>
+                                                @endfor
+                                            </select>
+                                        </div>
 
-                                    <!-- Buy Button -->
-                                    <button class="w-full btn-primary px-6 py-4 rounded-lg font-bold text-lg shadow-lg hover:shadow-xl transition-all mb-4">
-                                        Tickets Kopen
-                                    </button>
+                                        <!-- Buy Button -->
+                                        <button class="w-full btn-primary px-6 py-4 rounded-lg font-bold text-lg shadow-lg hover:shadow-xl transition-all mb-4">
+                                            Tickets Kopen
+                                        </button>
 
-                                    <div class="text-xs text-center text-gray-500">
-                                        <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
-                                        </svg>
-                                        Veilige betaling
-                                    </div>
+                                        <div class="text-xs text-center text-gray-500">
+                                            <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                                            </svg>
+                                            Veilige betaling
+                                        </div>
+                                    @else
+                                        <!-- Sold Out -->
+                                        <div class="text-center mb-4">
+                                            <div class="bg-red-100 border-2 border-red-500 rounded-lg p-6 mb-4">
+                                                <svg class="w-12 h-12 mx-auto text-red-500 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                                </svg>
+                                                <h3 class="text-2xl font-bold text-red-600 mb-2">UITVERKOCHT</h3>
+                                                <p class="text-gray-700">Dit evenement is helaas uitverkocht</p>
+                                            </div>
+                                            <a href="https://www.ticketswap.nl/" target="_blank" class="block w-full bg-green-600 text-gray-900 px-6 py-4 rounded-lg font-bold text-lg hover:bg-green-700 transition">
+                                                Bekijk TicketSwap
+                                            </a>
+                                            <p class="text-xs text-gray-500 mt-2">Misschien vind je nog tickets via doorverkoop</p>
+                                        </div>
+                                    @endif
                                 @else
                                     <!-- Login Required -->
                                     <div class="text-center mb-4">

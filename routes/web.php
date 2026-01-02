@@ -29,4 +29,9 @@ Route::middleware(['auth', 'verified', 'can:admin'])->prefix('admin')->group(fun
         'update' => 'admin.events.update',
         'destroy' => 'admin.events.destroy',
     ]);
+
+    // Category management routes
+    Route::post('categories', [\App\Http\Controllers\Admin\CategoryController::class, 'store'])->name('admin.categories.store');
+    Route::put('categories/{category}', [\App\Http\Controllers\Admin\CategoryController::class, 'update'])->name('admin.categories.update');
+    Route::delete('categories/{category}', [\App\Http\Controllers\Admin\CategoryController::class, 'destroy'])->name('admin.categories.destroy');
 });

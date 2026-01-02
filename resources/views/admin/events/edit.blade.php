@@ -77,11 +77,34 @@
                     </div>
 
                     <!-- Image URL -->
-                    <div class="mb-8">
+                    <div class="mb-6">
                         <label for="image_url" class="block text-sm font-medium text-gray-700 mb-2">Afbeelding URL (optioneel)</label>
                         <input type="url" name="image_url" id="image_url" value="{{ old('image_url', $event->image_url) }}"
                             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('image_url') border-red-500 @enderror">
                         @error('image_url')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Categories -->
+                    <div class="mb-8">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Categorieën</label>
+                        <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                            @foreach($categories as $category)
+                                <label class="flex items-center p-3 border border-gray-300 rounded-lg hover:bg-gray-50 cursor-pointer">
+                                    <input type="checkbox" name="categories[]" value="{{ $category->id }}"
+                                        {{ in_array($category->id, old('categories', $event->categories->pluck('id')->toArray())) ? 'checked' : '' }}
+                                        class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                                    <span class="ml-2 text-sm text-gray-700">
+                                        @if($category->icon)
+                                            <span class="mr-1">{{ $category->icon }}</span>
+                                        @endif
+                                        {{ $category->name }}
+                                    </span>
+                                </label>
+                            @endforeach
+                        </div>
+                        @error('categories')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>

@@ -5,9 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Event extends Model
+class Category extends Model
 {
     use HasFactory;
 
@@ -18,12 +17,9 @@ class Event extends Model
      */
     protected $fillable = [
         'name',
+        'slug',
         'description',
-        'location',
-        'date',
-        'total_tickets',
-        'price',
-        'image_url',
+        'icon',
     ];
 
     /**
@@ -35,18 +31,11 @@ class Event extends Model
     {
         return [
             'id' => 'integer',
-            'date' => 'datetime',
-            'price' => 'decimal:2',
         ];
     }
 
-    public function tickets(): HasMany
+    public function events(): BelongsToMany
     {
-        return $this->hasMany(Tickets::class);
-    }
-
-    public function categories(): BelongsToMany
-    {
-        return $this->belongsToMany(Category::class);
+        return $this->belongsToMany(Event::class);
     }
 }

@@ -1,4 +1,13 @@
 models:
+  Category:
+    name: string
+    slug: string unique
+    description: text nullable
+    icon: string nullable
+    relationships:
+      belongsToMany: Event
+    timestamps: true
+
   Event:
     name: string
     description: text
@@ -9,6 +18,7 @@ models:
     image_url: string nullable
     relationships:
       hasMany: tickets
+      belongsToMany: Category
     timestamps: true
 
   Payment:

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Event;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -16,7 +17,8 @@ class EventController extends Controller
     public function index(): View
     {
         $events = Event::latest()->paginate(10);
-        return view('admin.events.index', compact('events'));
+        $categories = Category::all();
+        return view('admin.events.index', compact('events', 'categories'));
     }
 
     /**
@@ -24,7 +26,8 @@ class EventController extends Controller
      */
     public function create(): View
     {
-        return view('admin.events.create');
+        $categories = Category::all();
+        return view('admin.events.create', compact('categories'));
     }
 
     /**
@@ -40,9 +43,16 @@ class EventController extends Controller
             'total_tickets' => 'required|integer|min:1',
             'price' => 'required|numeric|min:0',
             'image_url' => 'nullable|url|max:255',
+            'categories' => 'nullable|array',
+            'categories.*' => 'exists:categories,id',
         ]);
 
-        Event::create($validated);
+        $event = Event::create($validated);
+
+        // Attach categories if provided
+        if ($request->has('categories')) {
+            $event->categories()->attach($request->categories);
+        }
 
         return redirect()->route('admin.events.index')
             ->with('success', 'Evenement succesvol aangemaakt!');
@@ -53,7 +63,8 @@ class EventController extends Controller
      */
     public function edit(Event $event): View
     {
-        return view('admin.events.edit', compact('event'));
+        $categories = Category::all();
+        return view('admin.events.edit', compact('event', 'categories'));
     }
 
     /**
@@ -69,9 +80,14 @@ class EventController extends Controller
             'total_tickets' => 'required|integer|min:1',
             'price' => 'required|numeric|min:0',
             'image_url' => 'nullable|url|max:255',
+            'categories' => 'nullable|array',
+            'categories.*' => 'exists:categories,id',
         ]);
 
         $event->update($validated);
+
+        // Sync categories (removes old ones and adds new ones)
+        $event->categories()->sync($request->categories ?? []);
 
         return redirect()->route('admin.events.index')
             ->with('success', 'Evenement succesvol bijgewerkt!');
