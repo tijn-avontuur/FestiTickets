@@ -31,18 +31,18 @@
                     </button>
                 @endif
             </div>
-            <div class="flex flex-wrap gap-2">
+            <div class="flex-wrap gap-2">
                 @foreach($categories as $category)
                     <button
                         wire:click="toggleCategory({{ $category->id }})"
-                        class="inline-flex items-center px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-all whitespace-nowrap
+                        class="inline-flex items-center px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-all
                             {{ in_array($category->id, $selectedCategories)
                                 ? 'bg-blue-600 text-gray-700 shadow-md hover:bg-blue-700'
                                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:shadow-sm' }}">
                         @if($category->icon)
                             <span class="mr-1 sm:mr-1.5">{{ $category->icon }}</span>
                         @endif
-                        {{ $category->name }}
+                        <span class="whitespace-nowrap">{{ $category->name }}</span>
                     </button>
                 @endforeach
             </div>
