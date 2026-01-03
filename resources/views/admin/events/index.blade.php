@@ -7,9 +7,14 @@
                     <h1 class="text-3xl font-bold text-gray-900 mb-2">Admin Dashboard - Evenementen</h1>
                     <p class="text-gray-600">Beheer alle evenementen in het systeem</p>
                 </div>
-                <a href="{{ route('admin.events.create') }}" class="btn-primary px-6 py-3 rounded-lg font-semibold shadow-md hover:shadow-lg transition-all">
-                    + Nieuw Evenement
-                </a>
+                <div class="flex gap-3">
+                    <a href="{{ route('admin.payments.index') }}" class="bg-purple-600 text-gray-100 px-6 py-3 rounded-lg font-semibold shadow-md hover:bg-purple-700 hover:shadow-lg transition-all">
+                        💳 Betalingen
+                    </a>
+                    <a href="{{ route('admin.events.create') }}" class="btn-primary px-6 py-3 rounded-lg font-semibold shadow-md hover:shadow-lg transition-all">
+                        + Nieuw Evenement
+                    </a>
+                </div>
             </div>
 
             <!-- Success Message -->

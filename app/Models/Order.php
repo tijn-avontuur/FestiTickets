@@ -18,9 +18,13 @@ class Order extends Model
      */
     protected $fillable = [
         'user_id',
-        'payment_id',
+        'event_id',
+        'quantity',
+        'ticket_price',
+        'service_fee',
         'total_amount',
         'status',
+        'order_number',
     ];
 
     /**
@@ -33,7 +37,10 @@ class Order extends Model
         return [
             'id' => 'integer',
             'user_id' => 'integer',
-            'payment_id' => 'integer',
+            'event_id' => 'integer',
+            'quantity' => 'integer',
+            'ticket_price' => 'decimal:2',
+            'service_fee' => 'decimal:2',
             'total_amount' => 'decimal:2',
         ];
     }
@@ -43,9 +50,14 @@ class Order extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function payment(): BelongsTo
+    public function event(): BelongsTo
     {
-        return $this->belongsTo(Payment::class);
+        return $this->belongsTo(Event::class);
+    }
+
+    public function payment(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(Payment::class);
     }
 
     public function tickets(): HasMany

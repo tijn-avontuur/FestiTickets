@@ -62,22 +62,6 @@
                             </p>
                         </div>
                     </div>
-
-                    <!-- Payment Methods (Placeholder for Mollie) -->
-                    <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                        <div class="p-6">
-                            <h2 class="text-xl font-bold text-gray-900 mb-4">Betaalmethode</h2>
-
-                            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 text-center">
-                                <svg class="w-12 h-12 mx-auto text-blue-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
-                                </svg>
-                                <p class="text-sm text-gray-700">
-                                    Betaalmethodes worden beschikbaar na Mollie integratie
-                                </p>
-                            </div>
-                        </div>
-                    </div>
                 </div>
 
                 <!-- Order Summary Sidebar -->
@@ -124,15 +108,20 @@
                             </div>
 
                             <!-- Action Buttons -->
-                            <div class="space-y-3">
-                                <button type="button" class="w-full btn-primary px-6 py-4 rounded-lg font-bold text-lg shadow-lg hover:shadow-xl transition-all">
-                                    Doorgaan naar Betaling
-                                </button>
+                            <form action="{{ route('payment.create', $event) }}" method="POST">
+                                @csrf
+                                <input type="hidden" name="quantity" value="{{ $quantity }}">
 
-                                <a href="{{ route('events.show', $event) }}" class="block w-full text-center bg-white border-2 border-gray-300 text-gray-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-50 transition">
-                                    Terug naar evenement
-                                </a>
-                            </div>
+                                <div class="space-y-3">
+                                    <button type="submit" class="w-full btn-primary px-6 py-4 rounded-lg font-bold text-lg shadow-lg hover:shadow-xl transition-all">
+                                        Doorgaan naar Betaling
+                                    </button>
+
+                                    <a href="{{ route('events.show', $event) }}" class="block w-full text-center bg-white border-2 border-gray-300 text-gray-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-50 transition">
+                                        Terug naar evenement
+                                    </a>
+                                </div>
+                            </form>
 
                             <!-- Security Notice -->
                             <div class="mt-6 pt-6 border-t mt-4">

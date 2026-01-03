@@ -16,10 +16,13 @@ class Payment extends Model
      * @var array
      */
     protected $fillable = [
-        'provider',
-        'payment_reference',
+        'order_id',
+        'mollie_payment_id',
         'status',
         'amount',
+        'currency',
+        'method',
+        'paid_at',
     ];
 
     /**
@@ -31,12 +34,14 @@ class Payment extends Model
     {
         return [
             'id' => 'integer',
+            'order_id' => 'integer',
             'amount' => 'decimal:2',
+            'paid_at' => 'datetime',
         ];
     }
 
-    public function orders(): HasMany
+    public function order(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->hasMany(Orders::class);
+        return $this->belongsTo(Order::class);
     }
 }
