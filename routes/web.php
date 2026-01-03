@@ -20,6 +20,10 @@ Route::middleware('auth')->group(function () {
     Route::get('payment/{order}/success', [\App\Http\Controllers\PaymentController::class, 'success'])->name('payment.success');
     Route::get('payment/{order}/failed', [\App\Http\Controllers\PaymentController::class, 'failed'])->name('payment.failed');
     Route::get('payment/{order}/pending', [\App\Http\Controllers\PaymentController::class, 'pending'])->name('payment.pending');
+
+    // Ticket download routes
+    Route::get('orders/{order}/ticket/download', [\App\Http\Controllers\PaymentController::class, 'downloadTicket'])->name('order.ticket.download');
+    Route::get('orders/{order}/ticket/preview', [\App\Http\Controllers\PaymentController::class, 'previewTicket'])->name('order.ticket.preview');
 });
 
 // Mollie webhook (no auth middleware needed)
@@ -51,4 +55,5 @@ Route::middleware(['auth', 'verified', 'can:admin'])->prefix('admin')->group(fun
     // Payment management routes
     Route::get('payments', [\App\Http\Controllers\Admin\PaymentController::class, 'index'])->name('admin.payments.index');
     Route::get('payments/{payment}', [\App\Http\Controllers\Admin\PaymentController::class, 'show'])->name('admin.payments.show');
+    Route::get('payments/{payment}/ticket/preview', [\App\Http\Controllers\Admin\PaymentController::class, 'previewTicket'])->name('admin.payments.ticket.preview');
 });

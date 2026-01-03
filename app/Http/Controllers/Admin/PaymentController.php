@@ -7,6 +7,10 @@ use App\Models\Payment;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Illuminate\Http\Response;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Endroid\QrCode\QrCode;
+use Endroid\QrCode\Writer\PngWriter;
 
 class PaymentController extends Controller
 {
@@ -30,5 +34,28 @@ class PaymentController extends Controller
         $payment->load(['order.user', 'order.event']);
 
         return view('admin.payments.show', compact('payment'));
+    }
+
+    /**
+     * Preview the ticket PDF for a payment
+     */
+    public function previewTicket(Payment $payment): Response
+    {
+        $order = $payment->order;
+        $order->load(['user', 'event']);
+
+        // Generate QR code
+        $qrCode = new QrCode($order->order_number);
+        $writer = new PngWriter();
+        $result = $writer->write($qrCode);
+        $qrCodeHtml = '<img src="' . $result->getDataUri() . '" style="width: 250px; height: 250px;" />';
+
+        // Generate PDF
+        $pdf = Pdf::loadView('pdf.ticket', [
+            'order' => $order,
+            'qrCode' => $qrCodeHtml
+        ]);
+
+        return $pdf->stream('ticket-' . $order->order_number . '.pdf');
     }
 }

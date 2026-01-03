@@ -5,7 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Event;
 use App\Models\Order;
 use App\Models\Payment;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Endroid\QrCode\QrCode;
+use Endroid\QrCode\Writer\PngWriter;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Mollie\Laravel\Facades\Mollie;
 
@@ -110,6 +114,9 @@ class PaymentController extends Controller
             // Decrease available tickets
             $order->event->decrement('total_tickets', $order->quantity);
 
+            // Generate and save PDF ticket
+            $this->generateTicketPdf($order);
+
             return redirect()->route('payment.success', $order);
         }
 
@@ -204,4 +211,89 @@ class PaymentController extends Controller
 
         return view('payments.pending', compact('order'));
     }
+
+    /**
+     * Download ticket PDF
+     */
+    public function downloadTicket(Order $order)
+    {
+        // Check if user owns this order
+        if ($order->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        // Check if ticket exists
+        if (!$order->ticket_path || !Storage::exists($order->ticket_path)) {
+            // Generate PDF if it doesn't exist
+            $this->generateTicketPdf($order);
+        }
+
+        return Storage::download($order->ticket_path, 'ticket-' . $order->order_number . '.pdf');
+    }
+
+    /**
+     * Preview ticket PDF in browser (for testing)
+     */
+    public function previewTicket(Order $order)
+    {
+        // Check if user owns this order
+        if ($order->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        // Load order with relationships
+        $order->load(['user', 'event']);
+
+        // Generate QR Code - simpelste aanpak
+        $qrCode = new QrCode($order->order_number);
+        $writer = new PngWriter();
+        $result = $writer->write($qrCode);
+        $qrCodeHtml = '<img src="' . $result->getDataUri() . '" alt="QR Code" style="width: 250px; height: 250px;" />';
+
+        // Generate and stream PDF directly to browser
+        $pdf = Pdf::loadView('pdf.ticket', [
+            'order' => $order,
+            'qrCode' => $qrCodeHtml,
+        ]);
+
+        return $pdf->stream('ticket-' . $order->order_number . '.pdf');
+    }
+
+    /**
+     * Generate and save PDF ticket
+     */
+    private function generateTicketPdf(Order $order)
+    {
+        // Load order with relationships
+        $order->load(['user', 'event']);
+
+        // Generate QR Code - simpelste aanpak
+        $qrCode = new QrCode($order->order_number);
+        $writer = new PngWriter();
+        $result = $writer->write($qrCode);
+        $qrCodeHtml = '<img src="' . $result->getDataUri() . '" alt="QR Code" style="width: 250px; height: 250px;" />';
+
+        // Generate PDF from view
+        $pdf = Pdf::loadView('pdf.ticket', [
+            'order' => $order,
+            'qrCode' => $qrCodeHtml,
+        ]);
+
+        // Create tickets directory if it doesn't exist
+        if (!Storage::exists('tickets')) {
+            Storage::makeDirectory('tickets');
+        }
+
+        // Save PDF to storage
+        $filename = 'ticket-' . $order->order_number . '.pdf';
+        $path = 'tickets/' . $filename;
+
+        Storage::put($path, $pdf->output());
+
+        // Update order with ticket path
+        $order->update(['ticket_path' => $path]);
+
+        return $path;
+    }
 }
+

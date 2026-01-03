@@ -147,7 +147,19 @@
                                         <div class="text-xs text-gray-500">{{ $payment->created_at->format('H:i') }}</div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                        <a href="{{ route('admin.payments.show', $payment) }}" class="text-blue-600 hover:text-blue-900">Details</a>
+                                        <div class="flex items-center gap-3">
+                                            <a href="{{ route('admin.payments.show', $payment) }}" class="text-blue-600 hover:text-blue-900">Details</a>
+                                            @if($payment->status === 'paid' && $payment->order->ticket_path)
+                                                <a href="{{ route('admin.payments.ticket.preview', $payment) }}"
+                                                   target="_blank"
+                                                   class="inline-flex items-center gap-1 text-purple-600 hover:text-purple-900">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                                                    </svg>
+                                                    PDF
+                                                </a>
+                                            @endif
+                                        </div>
                                     </td>
                                 </tr>
                             @empty

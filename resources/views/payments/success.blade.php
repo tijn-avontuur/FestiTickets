@@ -99,6 +99,36 @@
                 </ul>
             </div>
 
+            <!-- Download Ticket Section -->
+            <div class="bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg shadow-lg p-6 mb-6 text-center">
+                <div class="mb-4">
+                    <svg class="w-16 h-16 mx-auto text-gray-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-100 mb-2">Download je Ticket</h3>
+                <p class="text-blue-100 mb-6">Je PDF ticket met QR-code is klaar om te downloaden</p>
+
+                <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                    <a href="{{ route('order.ticket.preview', $order) }}"
+                       target="_blank"
+                       class="inline-flex items-center justify-center gap-2 bg-white text-purple-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                        </svg>
+                        Bekijk Ticket
+                    </a>
+                    <a href="{{ route('order.ticket.download', $order) }}"
+                       class="inline-flex items-center justify-center gap-2 bg-green-500 text-gray-100 px-6 py-3 rounded-lg font-semibold hover:bg-green-600 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                        </svg>
+                        Download PDF
+                    </a>
+                </div>
+            </div>
+
             <!-- Action Buttons -->
             <div class="flex flex-col sm:flex-row gap-4">
                 <a href="{{ route('events.index') }}" class="flex-1 text-center bg-blue-600 text-gray-100 px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition">

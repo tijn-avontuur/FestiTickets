@@ -25,6 +25,7 @@ class Order extends Model
         'total_amount',
         'status',
         'order_number',
+        'ticket_path',
     ];
 
     /**
