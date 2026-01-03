@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\Event;
 use App\Models\Order;
 use App\Models\Payment;
+use App\Mail\OrderConfirmation;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Writer\PngWriter;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Mollie\Laravel\Facades\Mollie;
@@ -116,6 +118,12 @@ class PaymentController extends Controller
 
             // Generate and save PDF ticket
             $this->generateTicketPdf($order);
+
+            // Refresh order to get updated ticket_path and reload relationships
+            $order->refresh()->load(['user', 'event']);
+
+            // Send order confirmation email with PDF attachment
+            Mail::to($order->user->email)->send(new OrderConfirmation($order));
 
             return redirect()->route('payment.success', $order);
         }
