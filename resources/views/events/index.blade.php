@@ -18,7 +18,7 @@
                             <h3 class="font-semibold text-lg mb-2">Account vereist</h3>
                             <p class="mb-3">Je moet ingelogd zijn om alle evenementen te bekijken en tickets te kopen.</p>
                             <div class="flex gap-3">
-                                <a href="{{ route('login') }}" class="bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-700 transition">Inloggen</a>
+                                <a href="{{ route('login') }}" class="bg-blue-600 text-gray-100 px-6 py-2 rounded-lg font-semibold hover:bg-blue-700 transition">Inloggen</a>
                                 <a href="{{ route('register') }}" class="bg-white border-2 border-blue-600 text-blue-600 px-6 py-2 rounded-lg font-semibold hover:bg-blue-50 transition">Account aanmaken</a>
                             </div>
                         </div>

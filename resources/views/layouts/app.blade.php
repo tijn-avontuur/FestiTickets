@@ -17,11 +17,11 @@
                         <a href="{{ route('profile.edit') }}" class="text-gray-700 hover:text-black transition">My Account</a>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
-                            <button class="bg-black text-white px-5 py-2.5 rounded hover:bg-gray-800 transition">Logout</button>
+                            <button class="bg-black text-gray-100 px-5 py-2.5 rounded hover:bg-gray-800 transition">Logout</button>
                         </form>
                     @else
                         <a href="{{ route('login') }}" class="text-gray-700 hover:text-black transition">Login</a>
-                        <a href="{{ route('register') }}" class="bg-black text-white px-5 py-2.5 rounded hover:bg-gray-800 transition">Sign Up</a>
+                        <a href="{{ route('register') }}" class="bg-black text-gray-100 px-5 py-2.5 rounded hover:bg-gray-800 transition">Sign Up</a>
                     @endauth
                 </div>
             </div>

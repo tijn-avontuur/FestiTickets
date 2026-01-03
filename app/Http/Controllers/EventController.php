@@ -31,6 +31,41 @@ class EventController extends Controller
     }
 
     /**
+     * Show the checkout page for the event.
+     */
+    public function checkout(Event $event, Request $request): View|RedirectResponse
+    {
+        $quantity = (int) $request->input('quantity', 1);
+
+        // Validate quantity
+        if ($quantity < 1 || $quantity > 10) {
+            return redirect()->route('events.show', $event)
+                ->with('error', 'Ongeldige hoeveelheid tickets.');
+        }
+
+        // Check if enough tickets available
+        if ($quantity > $event->total_tickets) {
+            return redirect()->route('events.show', $event)
+                ->with('error', 'Er zijn niet genoeg tickets beschikbaar.');
+        }
+
+        // Check if event is sold out
+        if ($event->total_tickets <= 0) {
+            return redirect()->route('events.show', $event)
+                ->with('error', 'Dit evenement is uitverkocht.');
+        }
+
+        // Calculate costs
+        $ticketPrice = $event->price;
+        $subtotal = $ticketPrice * $quantity;
+        $serviceFeePercentage = 2.5; // 2.5%
+        $serviceFee = $subtotal * ($serviceFeePercentage / 100);
+        $total = $subtotal + $serviceFee;
+
+        return view('events.checkout', compact('event', 'quantity', 'ticketPrice', 'subtotal', 'serviceFee', 'serviceFeePercentage', 'total'));
+    }
+
+    /**
      * Show the form for creating a new event.
      */
     public function create(): View

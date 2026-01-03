@@ -77,7 +77,7 @@
                         @endif
                         <!-- Sold Out Badge -->
                         @if($event->total_tickets == 0)
-                            <div class="absolute top-4 left-4 bg-red-600 text-white px-3 py-1 rounded-full shadow-lg font-bold text-sm">
+                            <div class="absolute top-4 left-4 bg-red-600 text-gray-100 px-3 py-1 rounded-full shadow-lg font-bold text-sm">
                                 UITVERKOCHT
                             </div>
                         @endif

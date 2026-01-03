@@ -190,20 +190,22 @@
 
                                 @auth
                                     @if($event->total_tickets > 0)
-                                        <!-- Ticket Selection -->
-                                        <div class="mb-6">
-                                            <label for="quantity" class="block text-sm font-medium text-gray-700 mb-2">Aantal tickets</label>
-                                            <select id="quantity" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                                                @for($i = 1; $i <= min(10, $event->total_tickets); $i++)
-                                                    <option value="{{ $i }}">{{ $i }} {{ $i == 1 ? 'ticket' : 'tickets' }}</option>
-                                                @endfor
-                                            </select>
-                                        </div>
+                                        <!-- Ticket Selection Form -->
+                                        <form action="{{ route('events.checkout', $event) }}" method="GET">
+                                            <div class="mb-6">
+                                                <label for="quantity" class="block text-sm font-medium text-gray-700 mb-2">Aantal tickets</label>
+                                                <select name="quantity" id="quantity" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                                    @for($i = 1; $i <= min(10, $event->total_tickets); $i++)
+                                                        <option value="{{ $i }}">{{ $i }} {{ $i == 1 ? 'ticket' : 'tickets' }}</option>
+                                                    @endfor
+                                                </select>
+                                            </div>
 
-                                        <!-- Buy Button -->
-                                        <button class="w-full btn-primary px-6 py-4 rounded-lg font-bold text-lg shadow-lg hover:shadow-xl transition-all mb-4">
-                                            Tickets Kopen
-                                        </button>
+                                            <!-- Buy Button -->
+                                            <button type="submit" class="w-full btn-primary px-6 py-4 rounded-lg font-bold text-lg shadow-lg hover:shadow-xl transition-all mb-4">
+                                                Tickets Kopen
+                                            </button>
+                                        </form>
 
                                         <div class="text-xs text-center text-gray-500">
                                             <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -231,7 +233,7 @@
                                     <!-- Login Required -->
                                     <div class="text-center mb-4">
                                         <p class="text-sm text-gray-600 mb-4">Je moet ingelogd zijn om tickets te kopen</p>
-                                        <a href="{{ route('login') }}" class="block w-full bg-blue-600 text-white px-6 py-4 rounded-lg font-bold text-lg hover:bg-blue-700 transition mb-3">
+                                        <a href="{{ route('login') }}" class="block w-full bg-blue-600 text-gray-100 px-6 py-4 rounded-lg font-bold text-lg hover:bg-blue-700 transition mb-3">
                                             Inloggen
                                         </a>
                                         <a href="{{ route('register') }}" class="block w-full bg-white border-2 border-gray-300 text-gray-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-50 transition">

@@ -11,6 +11,7 @@ Route::get('/', function () {
 // Public event viewing (for all users, auth and guest)
 Route::get('events', [\App\Http\Controllers\EventController::class, 'index'])->name('events.index');
 Route::get('events/{event}', [\App\Http\Controllers\EventController::class, 'show'])->name('events.show');
+Route::get('events/{event}/checkout', [\App\Http\Controllers\EventController::class, 'checkout'])->middleware('auth')->name('events.checkout');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::redirect('settings', 'settings/profile');
