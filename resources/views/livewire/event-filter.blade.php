@@ -1,50 +1,62 @@
 <div>
     <!-- Search and Filter Section -->
     <div class="bg-white rounded-lg shadow-md p-6 mb-8">
-        <!-- Search Bar -->
-        <div class="mb-6">
-            <div class="flex justify-between items-center mb-2">
-                <label for="search" class="block text-sm font-medium text-gray-700">Zoeken</label>
-                @if($search)
-                    <button wire:click="clearFilters" class="text-sm text-blue-600 hover:text-blue-800 hover:underline font-medium transition">
-                        Filters wissen
-                    </button>
-                @endif
+        <div class="flex flex-col lg:flex-row gap-4">
+            <!-- Search Bar (Left - Larger) -->
+            <div class="flex-1">
+                <div class="flex justify-between items-center mb-2">
+                    <label for="search" class="block text-sm font-medium text-gray-700">Zoeken</label>
+                    @if($search || count($selectedCategories) > 0)
+                        <button wire:click="clearFilters" class="text-sm text-blue-600 hover:text-blue-800 hover:underline font-medium transition">
+                            Filters wissen
+                        </button>
+                    @endif
+                </div>
+                <div class="relative">
+                    <input
+                        type="text"
+                        id="search"
+                        wire:model.live.debounce.300ms="search"
+                        placeholder="   Zoek op naam, locatie of beschrijving..."
+                        class="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                </div>
             </div>
-            <div class="relative">
-                <input
-                    type="text"
-                    id="search"
-                    wire:model.live.debounce.300ms="search"
-                    placeholder="   Zoek op naam, locatie of beschrijving..."
-                    class="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-            </div>
-        </div>
 
-        <!-- Category Filter -->
-        <div>
-            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 mb-3">
-                <label class="block text-sm font-medium text-gray-700">Filter op Categorie</label>
-                @if(count($selectedCategories) > 0)
-                    <button wire:click="clearFilters" class="text-sm text-blue-600 hover:text-blue-800 hover:underline font-medium transition text-left sm:text-right">
-                        Filters wissen
-                    </button>
-                @endif
-            </div>
-            <div class="flex-wrap gap-2">
-                @foreach($categories as $category)
-                    <button
-                        wire:click="toggleCategory({{ $category->id }})"
-                        class="inline-flex items-center px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-all
-                            {{ in_array($category->id, $selectedCategories)
-                                ? 'bg-blue-600 text-gray-700 shadow-md hover:bg-blue-700'
-                                : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:shadow-sm' }}">
-                        @if($category->icon)
-                            <span class="mr-1 sm:mr-1.5">{{ $category->icon }}</span>
-                        @endif
-                        <span class="whitespace-nowrap">{{ $category->name }}</span>
-                    </button>
-                @endforeach
+            <!-- Filters (Right - Smaller) -->
+            <div class="lg:w-80 flex flex-col gap-4">
+                <!-- Sort By -->
+                <div>
+                    <label for="sortBy" class="block text-sm font-medium text-gray-700 mb-2">Sorteer op</label>
+                    <select
+                        id="sortBy"
+                        wire:model.live="sortBy"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-sm">
+                        <option value="date_asc">Datum (Eerst aankomend)</option>
+                        <option value="date_desc">Datum (Laatst aankomend)</option>
+                        <option value="price_asc">Prijs (Laag naar hoog)</option>
+                        <option value="price_desc">Prijs (Hoog naar laag)</option>
+                    </select>
+                </div>
+
+                <!-- Category Filter -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Categorie</label>
+                    <div class="flex flex-wrap gap-2">
+                        @foreach($categories as $category)
+                            <button
+                                wire:click="toggleCategory({{ $category->id }})"
+                                class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium transition-all
+                                    {{ in_array($category->id, $selectedCategories)
+                                        ? 'bg-blue-600 text-gray-700 shadow-md hover:bg-blue-700'
+                                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:shadow-sm' }}">
+                                @if($category->icon)
+                                    <span class="mr-1">{{ $category->icon }}</span>
+                                @endif
+                                <span class="whitespace-nowrap">{{ $category->name }}</span>
+                            </button>
+                        @endforeach
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -71,7 +83,7 @@
                         @if($event->image_url)
                             <img src="{{ $event->image_url }}" alt="{{ $event->name }}" class="w-full h-full object-cover">
                         @else
-                            <svg class="w-10 h-10 text-white opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-10 h-10 text-gray-700 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"></path>
                             </svg>
                         @endif

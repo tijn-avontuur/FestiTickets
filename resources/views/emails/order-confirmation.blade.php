@@ -14,7 +14,7 @@
             padding: 0;
         }
         .container {
-            max-width: 600px;
+            max-width: 700px;
             margin: 20px auto;
             background-color: #ffffff;
             border-radius: 8px;
@@ -22,15 +22,32 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
         .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: #ffffff;
-            padding: 30px;
             text-align: center;
+            border-bottom: 4px solid #6366f1;
+            padding: 30px;
+            background-color: #ffffff;
         }
         .header h1 {
-            margin: 0;
-            font-size: 28px;
-            font-weight: 700;
+            color: #6366f1;
+            font-size: 32px;
+            margin: 0 0 10px 0;
+            font-weight: bold;
+        }
+        .header .tagline {
+            color: #6b7280;
+            font-size: 14px;
+            font-style: italic;
+        }
+        .status-badge {
+            background-color: #10b981;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 4px;
+            display: inline-block;
+            font-weight: bold;
+            font-size: 14px;
+            margin: 20px 0;
+            text-align: center;
         }
         .content {
             padding: 30px;
@@ -40,100 +57,119 @@
             margin-bottom: 20px;
             color: #333;
         }
-        .event-details {
+        .ticket-container {
+            border: 3px solid #e5e7eb;
+            border-radius: 8px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        .event-section {
+            background-color: #667eea;
+            color: white;
+            padding: 25px;
+        }
+        .event-section h2 {
+            margin: 0 0 20px 0;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .event-detail-item {
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        .event-detail-item strong {
+            display: inline-block;
+            width: 100px;
+            font-weight: bold;
+        }
+        .order-section {
+            padding: 25px;
             background-color: #f9fafb;
-            border-left: 4px solid #667eea;
-            padding: 20px;
-            margin: 20px 0;
-            border-radius: 4px;
         }
-        .event-details h2 {
-            margin: 0 0 15px 0;
-            color: #667eea;
-            font-size: 22px;
-        }
-        .detail-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 8px 0;
-            border-bottom: 1px solid #e5e7eb;
-        }
-        .detail-row:last-child {
-            border-bottom: none;
-        }
-        .detail-label {
-            font-weight: 600;
-            color: #6b7280;
-        }
-        .detail-value {
-            color: #111827;
-            font-weight: 500;
-        }
-        .order-info {
-            background-color: #fff;
-            border: 1px solid #e5e7eb;
-            padding: 20px;
-            margin: 20px 0;
-            border-radius: 4px;
-        }
-        .order-info h3 {
-            margin: 0 0 15px 0;
+        .order-section h3 {
             color: #374151;
             font-size: 18px;
+            margin: 0 0 15px 0;
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 8px;
         }
-        .total-amount {
-            background-color: #ecfdf5;
-            border: 2px solid #10b981;
-            padding: 15px;
-            margin: 20px 0;
-            border-radius: 4px;
-            text-align: center;
+        .info-table {
+            width: 100%;
+            margin-bottom: 20px;
         }
-        .total-amount .label {
-            font-size: 14px;
-            color: #059669;
+        .info-table td {
+            padding: 8px 0;
+            font-size: 13px;
+        }
+        .info-table td:first-child {
+            color: #6b7280;
+            width: 45%;
+        }
+        .info-table td:last-child {
+            color: #111827;
             font-weight: 600;
-            margin-bottom: 5px;
         }
-        .total-amount .amount {
-            font-size: 32px;
-            color: #047857;
-            font-weight: 700;
+        .pricing-section {
+            padding: 20px 25px;
+            background-color: #fff;
+            border-top: 1px solid #e5e7eb;
+        }
+        .pricing-table {
+            width: 100%;
+        }
+        .pricing-table td {
+            padding: 6px 0;
+            font-size: 13px;
+        }
+        .pricing-table td:first-child {
+            color: #6b7280;
+        }
+        .pricing-table td:last-child {
+            text-align: right;
+            font-weight: 600;
+            color: #111827;
+        }
+        .pricing-table .total-row td {
+            border-top: 2px solid #e5e7eb;
+            padding-top: 12px;
+            margin-top: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #111827;
         }
         .attachment-notice {
             background-color: #fef3c7;
             border-left: 4px solid #f59e0b;
-            padding: 15px;
+            padding: 20px;
             margin: 20px 0;
             border-radius: 4px;
         }
-        .attachment-notice p {
-            margin: 0;
+        .attachment-notice h4 {
             color: #92400e;
+            font-size: 14px;
+            margin: 0 0 10px 0;
+            font-weight: bold;
         }
-        .button {
-            display: inline-block;
-            padding: 12px 30px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: #ffffff;
-            text-decoration: none;
-            border-radius: 6px;
-            font-weight: 600;
-            text-align: center;
-            margin: 20px 0;
+        .attachment-notice ul {
+            margin: 10px 0 0 20px;
+            color: #78350f;
+        }
+        .attachment-notice li {
+            margin-bottom: 6px;
+            font-size: 13px;
         }
         .footer {
             background-color: #f9fafb;
             padding: 20px 30px;
             text-align: center;
             color: #6b7280;
-            font-size: 14px;
-            border-top: 1px solid #e5e7eb;
+            font-size: 12px;
+            border-top: 2px solid #e5e7eb;
         }
         .footer p {
             margin: 5px 0;
         }
-        @media only screen and (max-width: 600px) {
+        @media only screen and (max-width: 700px) {
             .container {
                 margin: 10px;
             }
@@ -147,7 +183,12 @@
     <div class="container">
         <!-- Header -->
         <div class="header">
-            <h1>🎉 Ticket Bevestiging</h1>
+            <h1>FestiTickets</h1>
+            <div class="tagline">Je ticket is bevestigd!</div>
+        </div>
+
+        <div style="text-align: center; padding: 0 30px;">
+            <span class="status-badge">✓ BETALING GELUKT</span>
         </div>
 
         <!-- Content -->
@@ -161,67 +202,79 @@
                 Je vindt je ticket als PDF bijlage bij deze email.
             </p>
 
-            <!-- Event Details -->
-            <div class="event-details">
-                <h2>{{ $order->event->name }}</h2>
-                <div class="detail-row">
-                    <span class="detail-label">📅 Datum:</span>
-                    <span class="detail-value">{{ $order->event->date->format('d-m-Y') }}</span>
+            <!-- Ticket Container -->
+            <div class="ticket-container">
+                <!-- Event Details -->
+                <div class="event-section">
+                    <h2>{{ $order->event->name }}</h2>
+                    <div class="event-detail-item">
+                        <strong>Locatie:</strong> {{ $order->event->location }}
+                    </div>
+                    <div class="event-detail-item">
+                        <strong>Datum:</strong> {{ $order->event->date->format('l d F Y') }}
+                    </div>
+                    <div class="event-detail-item">
+                        <strong>Tijd:</strong> {{ $order->event->date->format('H:i') }} uur
+                    </div>
                 </div>
-                <div class="detail-row">
-                    <span class="detail-label">⏰ Tijd:</span>
-                    <span class="detail-value">{{ $order->event->date->format('H:i') }} uur</span>
+
+                <!-- Order Information -->
+                <div class="order-section">
+                    <h3>Bestelgegevens</h3>
+                    <table class="info-table">
+                        <tr>
+                            <td>Bestelnummer:</td>
+                            <td>{{ $order->order_number }}</td>
+                        </tr>
+                        <tr>
+                            <td>Klantnaam:</td>
+                            <td>{{ $order->user->name }}</td>
+                        </tr>
+                        <tr>
+                            <td>E-mailadres:</td>
+                            <td>{{ $order->user->email }}</td>
+                        </tr>
+                        <tr>
+                            <td>Aantal tickets:</td>
+                            <td>{{ $order->quantity }} {{ Str::plural('ticket', $order->quantity) }}</td>
+                        </tr>
+                        <tr>
+                            <td>Besteldatum:</td>
+                            <td>{{ $order->created_at->format('d-m-Y H:i') }}</td>
+                        </tr>
+                    </table>
                 </div>
-                <div class="detail-row">
-                    <span class="detail-label">📍 Locatie:</span>
-                    <span class="detail-value">{{ $order->event->location }}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">🎫 Aantal tickets:</span>
-                    <span class="detail-value">{{ $order->quantity }}</span>
+
+                <!-- Pricing Information -->
+                <div class="pricing-section">
+                    <table class="pricing-table">
+                        <tr>
+                            <td>Ticketprijs ({{ $order->quantity }}x €{{ number_format($order->ticket_price, 2, ',', '.') }}):</td>
+                            <td>€{{ number_format($order->ticket_price * $order->quantity, 2, ',', '.') }}</td>
+                        </tr>
+                        <tr>
+                            <td>Servicekosten (2.5%):</td>
+                            <td>€{{ number_format($order->service_fee, 2, ',', '.') }}</td>
+                        </tr>
+                        <tr class="total-row">
+                            <td>Totaalbedrag:</td>
+                            <td>€{{ number_format($order->total_amount, 2, ',', '.') }}</td>
+                        </tr>
+                    </table>
                 </div>
             </div>
 
-            <!-- Order Information -->
-            <div class="order-info">
-                <h3>Bestelgegevens</h3>
-                <div class="detail-row">
-                    <span class="detail-label">Bestelnummer:</span>
-                    <span class="detail-value">{{ $order->order_number }}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Tickets ({{ $order->quantity }}x €{{ number_format($order->ticket_price, 2, ',', '.') }}):</span>
-                    <span class="detail-value">€{{ number_format($order->quantity * $order->ticket_price, 2, ',', '.') }}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Servicekosten:</span>
-                    <span class="detail-value">€{{ number_format($order->service_fee, 2, ',', '.') }}</span>
-                </div>
-            </div>
-
-            <!-- Total Amount -->
-            <div class="total-amount">
-                <div class="label">TOTAAL BETAALD</div>
-                <div class="amount">€{{ number_format($order->total_amount, 2, ',', '.') }}</div>
-            </div>
-
-            <!-- Attachment Notice -->
+            <!-- Important Instructions -->
             <div class="attachment-notice">
-                <p>
-                    <strong>📎 Je ticket zit als PDF bijlage bij deze email.</strong><br>
-                    Download de PDF en bewaar deze goed. Je hebt de QR code nodig bij de ingang van het evenement.
-                </p>
+                <h4>Belangrijk - Je PDF ticket:</h4>
+                <ul>
+                    <li>Bewaar dit ticket zorgvuldig. Je hebt het nodig voor toegang tot het evenement.</li>
+                    <li>Toon de QR-code bij de ingang op je telefoon of in print.</li>
+                    <li>Elk ticket is uniek en kan maar één keer gescand worden.</li>
+                    <li>Kom op tijd! Deuren sluiten {{ $order->event->date->format('H:i') }} uur.</li>
+                    <li>Bij verlies of diefstal kun je het ticket opnieuw downloaden vanaf je account.</li>
+                </ul>
             </div>
-
-            <p>
-                <strong>Belangrijke informatie:</strong>
-            </p>
-            <ul>
-                <li>Neem de PDF (digitaal of geprint) mee naar het evenement</li>
-                <li>De QR code op je ticket wordt gescand bij de ingang</li>
-                <li>Kom op tijd om wachtrijen te vermijden</li>
-                <li>Check de evenement website voor actuele informatie</li>
-            </ul>
 
             <p style="margin-top: 30px;">
                 Heb je vragen over je bestelling? Neem dan contact met ons op.

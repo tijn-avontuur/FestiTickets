@@ -1,6 +1,6 @@
 <x-layouts.app>
     <div class="bg-gray-50 min-h-[calc(100vh-8rem)]">
-        <div class="max-w-5xl mx-auto px-6 py-12 mt-8">
+        <div class="max-w-7xl mx-auto px-6 py-12 mt-8">
             <!-- Back Button -->
             <div class="mb-6">
                 <a href="{{ route('events.index') }}" class="inline-flex items-center text-gray-600 hover:text-gray-900 transition">

@@ -13,10 +13,12 @@ class EventFilter extends Component
 
     public $search = '';
     public $selectedCategories = [];
+    public $sortBy = 'date_asc';
 
     protected $queryString = [
         'search' => ['except' => ''],
         'selectedCategories' => ['except' => []],
+        'sortBy' => ['except' => 'date_asc'],
     ];
 
     public function updatingSearch()
@@ -64,9 +66,26 @@ class EventFilter extends Component
                         $q->where('categories.id', $categoryId);
                     });
                 }
-            })
-            ->orderBy('date', 'asc')
-            ->paginate(9);
+            });
+
+        // Apply sorting
+        switch ($this->sortBy) {
+            case 'price_asc':
+                $events->orderBy('price', 'asc');
+                break;
+            case 'price_desc':
+                $events->orderBy('price', 'desc');
+                break;
+            case 'date_desc':
+                $events->orderBy('date', 'desc');
+                break;
+            case 'date_asc':
+            default:
+                $events->orderBy('date', 'asc');
+                break;
+        }
+
+        $events = $events->paginate(9);
 
         return view('livewire.event-filter', [
             'events' => $events,

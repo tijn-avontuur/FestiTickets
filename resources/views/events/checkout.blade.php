@@ -1,6 +1,6 @@
 <x-layouts.app>
     <div class="bg-gray-50 min-h-[calc(100vh-8rem)]">
-        <div class="max-w-4xl mx-auto px-6 py-12 mt-8">
+        <div class="max-w-7xl mx-auto px-6 py-12 mt-8">
             <!-- Header -->
             <div class="mb-8">
                 <h1 class="text-3xl font-bold text-gray-900 mb-2">Afrekenen</h1>
