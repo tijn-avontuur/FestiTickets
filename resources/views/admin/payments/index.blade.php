@@ -2,9 +2,19 @@
     <div class="min-h-screen bg-gray-50 py-8">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <!-- Header -->
-            <div class="mb-8">
-                <h1 class="text-3xl font-bold text-gray-900">Betalingen Beheer</h1>
-                <p class="mt-2 text-sm text-gray-600">Overzicht van alle betalingen en orders</p>
+            <div class="mb-8 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-900">Betalingen Beheer</h1>
+                    <p class="mt-2 text-sm text-gray-600">Overzicht van alle betalingen en orders</p>
+                </div>
+
+                <a href="{{ route('admin.payments.export') }}"
+                   class="inline-flex items-center gap-2 rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white shadow hover:bg-emerald-700 transition">
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3M5 20h14"></path>
+                    </svg>
+                    Excel export verkopers
+                </a>
             </div>
 
             <!-- Stats Cards & Chart -->

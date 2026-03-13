@@ -54,6 +54,7 @@ Route::middleware(['auth', 'verified', 'can:admin'])->prefix('admin')->group(fun
 
     // Payment management routes
     Route::get('payments', [\App\Http\Controllers\Admin\PaymentController::class, 'index'])->name('admin.payments.index');
+    Route::get('payments/export/sales-report', [\App\Http\Controllers\Admin\PaymentController::class, 'exportSalesReport'])->name('admin.payments.export');
     Route::get('payments/{payment}', [\App\Http\Controllers\Admin\PaymentController::class, 'show'])->name('admin.payments.show');
     Route::get('payments/{payment}/ticket/preview', [\App\Http\Controllers\Admin\PaymentController::class, 'previewTicket'])->name('admin.payments.ticket.preview');
 });

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Exports\SellerSalesExport;
 use App\Http\Controllers\Controller;
 use App\Models\Payment;
 use App\Models\Order;
@@ -11,6 +12,8 @@ use Illuminate\Http\Response;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Writer\PngWriter;
+use Maatwebsite\Excel\Facades\Excel;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class PaymentController extends Controller
 {
@@ -57,5 +60,15 @@ class PaymentController extends Controller
         ]);
 
         return $pdf->stream('ticket-' . $order->order_number . '.pdf');
+    }
+
+    /**
+     * Export seller sales and revenue report to Excel.
+     */
+    public function exportSalesReport(): BinaryFileResponse
+    {
+        $filename = 'verkoper-verkoopoverzicht-' . now()->format('Y-m-d-His') . '.xlsx';
+
+        return Excel::download(new SellerSalesExport(), $filename);
     }
 }
