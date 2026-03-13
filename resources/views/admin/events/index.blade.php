@@ -24,6 +24,61 @@
                 </div>
             @endif
 
+            <!-- Sales Overview -->
+            <div class="mb-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
+                    <div class="bg-white rounded-lg shadow p-5">
+                        <p class="text-sm font-medium text-gray-500">Totale omzet</p>
+                        <p class="mt-2 text-2xl font-bold text-gray-900">€{{ number_format($totalRevenue, 2, ',', '.') }}</p>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-5">
+                        <p class="text-sm font-medium text-gray-500">Omzet deze maand</p>
+                        <p class="mt-2 text-2xl font-bold text-emerald-600">€{{ number_format($currentMonthRevenue, 2, ',', '.') }}</p>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-5">
+                        <p class="text-sm font-medium text-gray-500">Verkochte tickets</p>
+                        <p class="mt-2 text-2xl font-bold text-blue-600">{{ $ticketsSold }}</p>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-5">
+                        <p class="text-sm font-medium text-gray-500">Gemiddelde orderwaarde</p>
+                        <p class="mt-2 text-2xl font-bold text-purple-600">€{{ number_format($averageOrderValue, 2, ',', '.') }}</p>
+                        <p class="mt-1 text-xs text-gray-500">{{ $paidOrders }} betaalde orders</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+                    <div class="xl:col-span-2 bg-white rounded-lg shadow p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Omzettrend (laatste 6 maanden)</h3>
+                        <div class="h-80">
+                            <canvas id="revenueTrendChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow overflow-hidden">
+                        <div class="px-6 py-4 border-b border-gray-100">
+                            <h3 class="text-lg font-semibold text-gray-900">Top 5 events</h3>
+                            <p class="text-sm text-gray-500 mt-1">Op basis van omzet</p>
+                        </div>
+
+                        <div class="divide-y divide-gray-100">
+                            @forelse($eventSales as $sale)
+                                <div class="px-6 py-4">
+                                    <p class="text-sm font-semibold text-gray-900">{{ $sale->name }}</p>
+                                    <div class="mt-1 flex items-center justify-between text-xs text-gray-600">
+                                        <span>{{ (int) $sale->tickets_sold }} tickets</span>
+                                        <span class="font-semibold text-gray-900">€{{ number_format((float) $sale->revenue, 2, ',', '.') }}</span>
+                                    </div>
+                                </div>
+                            @empty
+                                <div class="px-6 py-8 text-sm text-gray-500">
+                                    Nog geen betaalde verkopen.
+                                </div>
+                            @endforelse
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Categories Section (Toggleable) -->
             <div class="mb-8" x-data="{ showCategories: false }">
                 <!-- Toggle Button -->
@@ -225,4 +280,59 @@
             </div>
         </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const ctx = document.getElementById('revenueTrendChart');
+
+            if (!ctx) {
+                return;
+            }
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: @json($chartLabels),
+                    datasets: [{
+                        label: 'Omzet (€)',
+                        data: @json($chartValues),
+                        borderRadius: 6,
+                        backgroundColor: 'rgba(59, 130, 246, 0.7)',
+                        borderColor: 'rgb(59, 130, 246)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return '€' + Number(value).toLocaleString('nl-NL');
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return 'Omzet: €' + Number(context.raw).toLocaleString('nl-NL', {
+                                        minimumFractionDigits: 2,
+                                        maximumFractionDigits: 2
+                                    });
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
 </x-layouts.app>

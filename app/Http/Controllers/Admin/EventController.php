@@ -6,10 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Models\Event;
 use App\Models\EventImage;
 use App\Models\Category;
+use App\Models\Order;
+use App\Models\Payment;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 
 class EventController extends Controller
 {
@@ -20,7 +24,74 @@ class EventController extends Controller
     {
         $events = Event::latest()->paginate(10);
         $categories = Category::all();
-        return view('admin.events.index', compact('events', 'categories'));
+
+        $paidOrdersQuery = Order::query()->whereHas('payment', function ($query) {
+            $query->where('status', 'paid');
+        });
+
+        $totalRevenue = (float) Payment::query()
+            ->where('status', 'paid')
+            ->sum('amount');
+
+        $paidOrders = (int) $paidOrdersQuery->count();
+        $ticketsSold = (int) (clone $paidOrdersQuery)->sum('quantity');
+        $averageOrderValue = $paidOrders > 0 ? round($totalRevenue / $paidOrders, 2) : 0;
+
+        $eventSales = Event::query()
+            ->leftJoin('orders', 'events.id', '=', 'orders.event_id')
+            ->leftJoin('payments', function ($join) {
+                $join->on('orders.id', '=', 'payments.order_id')
+                    ->where('payments.status', '=', 'paid');
+            })
+            ->select(
+                'events.id',
+                'events.name',
+                DB::raw('COALESCE(SUM(CASE WHEN payments.id IS NOT NULL THEN orders.quantity ELSE 0 END), 0) as tickets_sold'),
+                DB::raw('COALESCE(SUM(CASE WHEN payments.id IS NOT NULL THEN orders.total_amount ELSE 0 END), 0) as revenue')
+            )
+            ->groupBy('events.id', 'events.name')
+            ->orderByDesc('revenue')
+            ->limit(5)
+            ->get();
+
+        $monthlyRevenueData = Payment::query()
+            ->where('status', 'paid')
+            ->whereNotNull('paid_at')
+            ->selectRaw('YEAR(paid_at) as year, MONTH(paid_at) as month, SUM(amount) as revenue')
+            ->groupByRaw('YEAR(paid_at), MONTH(paid_at)')
+            ->orderByRaw('YEAR(paid_at) asc, MONTH(paid_at) asc')
+            ->get()
+            ->keyBy(fn ($item) => sprintf('%04d-%02d', $item->year, $item->month));
+
+        $chartLabels = [];
+        $chartValues = [];
+
+        foreach (range(5, 0) as $monthsAgo) {
+            $date = Carbon::now()->subMonths($monthsAgo);
+            $key = $date->format('Y-m');
+
+            $chartLabels[] = $date->translatedFormat('M Y');
+            $chartValues[] = round((float) ($monthlyRevenueData[$key]->revenue ?? 0), 2);
+        }
+
+        $currentMonthRevenue = (float) Payment::query()
+            ->where('status', 'paid')
+            ->whereMonth('paid_at', Carbon::now()->month)
+            ->whereYear('paid_at', Carbon::now()->year)
+            ->sum('amount');
+
+        return view('admin.events.index', compact(
+            'events',
+            'categories',
+            'totalRevenue',
+            'paidOrders',
+            'ticketsSold',
+            'averageOrderValue',
+            'eventSales',
+            'chartLabels',
+            'chartValues',
+            'currentMonthRevenue'
+        ));
     }
 
     /**
